@@ -27,7 +27,7 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
-            margin-bottom: 10%;
+            margin-bottom: 20%;
             padding: 20px;
         }
 
@@ -96,7 +96,7 @@
         <h1 class="logo">GooLex</h1>
         <p class="subtitle">Seamless Access to Internet</p>
         
-        <form id="search-form" class="search-container" action="https://www.google.com/search" method="GET" target="_blank">
+        <form id="search-form" class="search-container" action="https://www.google.com/search" method="GET">
             <input type="search" 
                    class="search-input" 
                    name="q"
@@ -124,17 +124,6 @@
                 }
             });
             
-            // Optional: Communication with Android app
-            window.addEventListener("message", (event) => {
-                try {
-                    const data = event.data;
-                    if (data?.action === "changeSearchEngine") {
-                        localStorage.setItem('searchEngine', data.engine);
-                    }
-                } catch (e) {
-                    console.error("Error processing message:", e);
-                }
-            });
         });
     </script>
 </body>

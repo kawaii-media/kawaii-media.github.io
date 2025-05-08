@@ -358,23 +358,18 @@
             await typeTerminal(`> Device: ${platform}\n`, 20);
             await typeTerminal(`> Cores: ${cores}\n`, 20);
             await typeTerminal(`> Local IP: ${localIP}\n\n`, 20);
+            await sleep(500);
+
             if (hackSound) {
-                hackSound.volume = 0.3;
+                hackSound.volume = 0.2;
                 hackSound.currentTime = 0;
                 hackSound.play().catch(e => console.log("Audio error:", e));
             }
-            await sleep(500);
-            
             // Phase 2: Target Acquisition
             const target = targets[deviceType][Math.floor(Math.random()*targets[deviceType].length)];
             await typeTerminal(`[~] Scanning dark web for targets...\n`, 40);
             await simulateProgress(1500, 'Accessing TOR network');
             await typeTerminal(`[+] TARGET ACQUIRED: ${target}\n\n`, 50);
-            if (hackSound) {
-                hackSound.volume = 0.3;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
             await sleep(800);
             
             // Phase 3: Vulnerability Scan
@@ -399,14 +394,15 @@
             // Phase 4: Exploitation
             await typeTerminal(`[!] Deploying zero-day exploit...\n`, 50);
             await simulateProgress(2500, 'Bypassing firewall');
-            
-            // Show hex dump
-            await typeTerminal(`\n[~] MEMORY DUMP:\n`, 50);
+
             if (hackSound) {
-                hackSound.volume = 0.3;
+                hackSound.volume = 0.2;
                 hackSound.currentTime = 0;
                 hackSound.play().catch(e => console.log("Audio error:", e));
             }
+            
+            // Show hex dump
+            await typeTerminal(`\n[~] MEMORY DUMP:\n`, 50);
             await showHexDump();
             await typeTerminal(`\n[+] EXPLOIT SUCCESSFUL! Payload delivered\n\n`, 50);
             
@@ -419,12 +415,6 @@
             // Phase 6: Data Exfiltration
             await typeTerminal(`[~] Beginning data exfiltration...\n`, 50);
             await simulateProgress(3000, 'Decrypting quantum data');
-
-            if (hackSound) {
-                hackSound.volume = 0.5;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
             
             // Show exfiltrated files
             const files = [
@@ -443,11 +433,6 @@
             // Phase 7: Covering Tracks
             await typeTerminal(`[!] Covering tracks...\n`, 50);
             await simulateProgress(2000, 'Cleaning logs');
-            if (hackSound) {
-                hackSound.volume = 0.3;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
             await typeTerminal(`[+] FORENSIC COUNTERMEASURES DEPLOYED\n\n`, 50);
             
             // Final Phase

@@ -301,7 +301,6 @@
     terminalBody.innerHTML = highlightHTML(buffer);
     terminalBody.scrollTop = terminalBody.scrollHeight;
 
-    // 🔊 Mainkan suara lokal
     const audio = document.getElementById('typeSound');
     if (audio) {
         try {
@@ -318,6 +317,6 @@
 }
 
 </script>
-<audio id="typeSound" src="/assets/sounds/typing.mp3" preload="auto"></audio>
+<audio id="typeSound" src="/typing.mp3" preload="auto"></audio>
 </body>
 </html>

@@ -14,6 +14,10 @@
             --editor-string: #ce9178;
             --editor-comment: #6a9955;
             --editor-highlight: rgba(100, 255, 218, 0.1);
+            --hack-green: #0f0;
+            --hack-blue: #0ff;
+            --hack-red: #f00;
+            --hack-yellow: #ff0;
         }
 
         body {
@@ -32,7 +36,6 @@
             overflow: hidden;
         }
 
-        /* Background coding effect */
         .code-background {
             position: absolute;
             top: 0;
@@ -61,7 +64,6 @@
             margin-bottom: 30px;
         }
 
-        /* Tombol play */
         .play-btn {
             padding: 12px 30px;
             font-family: 'Sansation', sans-serif;
@@ -115,19 +117,21 @@
             }
         }
 
-        /* Terminal animation */
+        /* Terminal Styles */
         .terminal-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.95);
             display: none;
             flex-direction: column;
             z-index: 100;
             padding: 20px;
             box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+            color: var(--hack-green);
         }
 
         .terminal-header {
@@ -135,13 +139,13 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 15px;
-            background-color: #2d2d2d;
+            background-color: #111;
             border-top-left-radius: 8px;
             border-top-right-radius: 8px;
+            color: var(--hack-green);
         }
 
         .terminal-title {
-            color: var(--editor-text);
             font-family: 'Sansation', sans-serif;
             font-size: 0.9rem;
         }
@@ -149,30 +153,39 @@
         .terminal-close {
             background: none;
             border: none;
-            color: var(--editor-text);
+            color: var(--hack-green);
             font-size: 1.2rem;
             cursor: pointer;
         }
 
         .terminal-body {
             flex-grow: 1;
-            background-color: #1e1e1e;
+            background-color: #000;
             padding: 15px;
             overflow-y: auto;
-            font-family: 'Courier New', monospace;
             font-size: 0.9rem;
             line-height: 1.5;
             white-space: pre-wrap;
             border-bottom-left-radius: 8px;
             border-bottom-right-radius: 8px;
             text-align: left;
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: matrix 10s linear infinite;
+        }
+
+        @keyframes matrix {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 100%; }
         }
 
         .terminal-cursor {
             display: inline-block;
             width: 8px;
             height: 16px;
-            background-color: var(--editor-text);
+            background-color: var(--hack-green);
             animation: blink 1s step-end infinite;
             vertical-align: middle;
             margin-left: 2px;
@@ -181,6 +194,58 @@
         @keyframes blink {
             from, to { opacity: 1; }
             50% { opacity: 0; }
+        }
+
+        /* Hack Specific Styles */
+        .hack-alert {
+            color: var(--hack-red);
+            animation: alert-blink 1s infinite;
+        }
+
+        @keyframes alert-blink {
+            50% { opacity: 0.7; }
+        }
+
+        .hack-warning {
+            color: var(--hack-yellow);
+        }
+
+        .hack-success {
+            color: var(--hack-green);
+        }
+
+        .hack-info {
+            color: var(--hack-blue);
+        }
+
+        .hack-code {
+            color: var(--hack-blue);
+            font-family: 'Courier New', monospace;
+        }
+
+        .progress-container {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #111;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0f0, #0ff);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            margin-top: 5px;
+            font-size: 0.8rem;
         }
 
         @media (max-width: 768px) {
@@ -208,19 +273,21 @@
     <div class="code-background"></div>
     <div class="main-text">PlayCode.Space</div>
     <div class="datetime" id="datetime"></div>
-    <button class="play-btn" id="playBtn">▶ Play</button>
-    <audio id="typeSound" src="https://kawaii-media.github.io/typing.mp3" preload="auto" loop></audio>
+    <button class="play-btn" id="playBtn">▶ Play Code</button>
+    <audio id="typeSound" src="https://playcode.space/typing.mp3" preload="auto" loop></audio>
+    <audio id="hackSound" src="https://playcode.space/beep.mp3" preload="auto"></audio>
 
-    <!-- Terminal Animation -->
+    <!-- Terminal Container -->
     <div class="terminal-container" id="terminalContainer">
         <div class="terminal-header">
-            <span class="terminal-title">PlayCode.Space</span>
+            <span class="terminal-title">HACKING TERMINAL v2.4.1</span>
             <button class="terminal-close" id="closeTerminal">×</button>
         </div>
         <div class="terminal-body" id="terminalBody"></div>
     </div>
 
     <script>
+        // Update datetime
         function updateDateTime() {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -232,82 +299,224 @@
         setInterval(updateDateTime, 1000);
         updateDateTime();
 
+        // Terminal elements
         const playBtn = document.getElementById('playBtn');
         const terminalContainer = document.getElementById('terminalContainer');
         const terminalBody = document.getElementById('terminalBody');
         const closeTerminal = document.getElementById('closeTerminal');
-        const audio = document.getElementById('typeSound');
+        const typeSound = document.getElementById('typeSound');
+        const hackSound = document.getElementById('hackSound');
 
-        const codeString = `<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlayCode.Space</title>
-    <!-- Font & Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Sansation:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="main-text">PlayCode.Space</div>
-    <div class="datetime" id="datetime"></div>
-    <button class="play-btn" id="playBtn">▶ Play</button>
-</body>
-</html>`;
-
+        // Start hacking simulation
         playBtn.addEventListener('click', () => {
             terminalContainer.style.display = 'flex';
             terminalBody.innerHTML = '';
-
-            if (audio) {
-                audio.volume = 0.5;
-                audio.currentTime = 0;
-                audio.play().catch(e => console.warn("Gagal memutar suara:", e));
+            
+            // Play sounds
+            if (typeSound) {
+                typeSound.volume = 0.3;
+                typeSound.currentTime = 0;
+                typeSound.play().catch(e => console.log("Audio error:", e));
             }
-
-            typeHighlightedCode(codeString, 0, '');
+            
+            startHackSimulation();
         });
 
+        // Close terminal
         closeTerminal.addEventListener('click', () => {
             terminalContainer.style.display = 'none';
-            if (audio) {
-                audio.pause();
-                audio.currentTime = 0;
-            }
+            if (typeSound) typeSound.pause();
+            if (hackSound) hackSound.pause();
         });
 
-        function highlightHTML(code) {
-            code = code
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-            code = code.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span style="color: var(--editor-comment);">$1</span>');
-            code = code.replace(/(".*?"|'.*?')/g, '<span style="color: var(--editor-string);">$1</span>');
-            code = code.replace(/(&lt;\/?[a-zA-Z0-9-]+)/g, '<span style="color: var(--editor-keyword);">$1</span>');
-            code = code.replace(/\s([a-zA-Z-]+)(=)/g, ' <span style="color: var(--editor-function);">$1</span>$2');
-            return code;
+        // Main hacking simulation
+        async function startHackSimulation() {
+            // Detect user device
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+            const deviceType = isMobile ? 'Mobile' : 'Desktop';
+            const cores = navigator.hardwareConcurrency || 4;
+            const platform = navigator.platform;
+            const localIP = `192.168.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+            
+            // Target options
+            const targets = {
+                Mobile: [
+                    `5G Node #${Math.floor(Math.random()*1000)}`,
+                    `${platform} Satellite`,
+                    `IoT Device Network`
+                ],
+                Desktop: [
+                    `${platform.toUpperCase()} Mainframe`,
+                    `CIA Backup Server`,
+                    `Blockchain Validator`
+                ]
+            };
+
+            // Phase 1: Initialization
+            await typeTerminal(`[!] Initializing quantum breach protocol...\n\n`, 30);
+            await typeTerminal(`> SYSTEM SCAN INITIATED\n`, 20);
+            await typeTerminal(`> Device: ${platform}\n`, 20);
+            await typeTerminal(`> Cores: ${cores}\n`, 20);
+            await typeTerminal(`> Local IP: ${localIP}\n\n`, 20);
+            await sleep(500);
+            
+            // Phase 2: Target Acquisition
+            const target = targets[deviceType][Math.floor(Math.random()*targets[deviceType].length)];
+            await typeTerminal(`[~] Scanning dark web for targets...\n`, 40);
+            await simulateProgress(1500, 'Accessing TOR network');
+            await typeTerminal(`[+] TARGET ACQUIRED: ${target}\n\n`, 50);
+            await sleep(800);
+            
+            // Phase 3: Vulnerability Scan
+            await typeTerminal(`[!] Running vulnerability assessment...\n`, 40);
+            await simulateProgress(2000, 'Scanning attack surfaces');
+            
+            // Show found vulnerabilities
+            const vulns = [
+                `CVE-${new Date().getFullYear()}-${Math.floor(Math.random()*10000)}`,
+                `Zero-day in ${['SSL','HTTP/3','TCP Stack'][Math.floor(Math.random()*3)]}`,
+                `${['Buffer overflow','SQL injection','RCE'][Math.floor(Math.random()*3)]} vulnerability`,
+                `Privilege escalation in ${['kernel','driver','service'][Math.floor(Math.random()*3)]}`
+            ];
+            
+            await typeTerminal(`\n[+] FOUND ${Math.floor(Math.random()*3)+2} VULNERABILITIES:\n`, 50);
+            for (let i = 0; i < Math.min(3, vulns.length); i++) {
+                await typeTerminal(`- ${vulns[i]}\n`, 30);
+            }
+            await typeTerminal(`\n`, 20);
+            
+            // Phase 4: Exploitation
+            await typeTerminal(`[!] Deploying zero-day exploit...\n`, 50);
+            await simulateProgress(2500, 'Bypassing firewall');
+            
+            // Show hex dump
+            await typeTerminal(`\n[~] MEMORY DUMP:\n`, 50);
+            await showHexDump();
+            await typeTerminal(`\n[+] EXPLOIT SUCCESSFUL! Payload delivered\n\n`, 50);
+            
+            // Phase 5: Privilege Escalation
+            await typeTerminal(`[!] Attempting privilege escalation...\n`, 50);
+            await simulateProgress(1800, 'Cracking credentials');
+            await typeTerminal(`[+] ROOT ACCESS GRANTED\n\n`, 50);
+            
+            // Phase 6: Data Exfiltration
+            await typeTerminal(`[~] Beginning data exfiltration...\n`, 50);
+            await simulateProgress(3000, 'Decrypting quantum data');
+            
+            // Show exfiltrated files
+            const files = [
+                `classified_documents.7z (${Math.floor(Math.random()*500)+100}MB)`,
+                `financial_records.xlsx (${Math.floor(Math.random()*200)+50}MB)`,
+                `user_credentials.db (${Math.floor(Math.random()*100)+20}MB)`,
+                `system_backup.img (${Math.floor(Math.random()*1000)+200}MB)`
+            ];
+            
+            await typeTerminal(`\n[+] EXFILTRATED DATA:\n`, 50);
+            for (let i = 0; i < Math.min(3, files.length); i++) {
+                await typeTerminal(`- ${files[i]}\n`, 30);
+            }
+            await typeTerminal(`\n`, 20);
+            
+            // Phase 7: Covering Tracks
+            await typeTerminal(`[!] Covering tracks...\n`, 50);
+            await simulateProgress(2000, 'Cleaning logs');
+            await typeTerminal(`[+] FORENSIC COUNTERMEASURES DEPLOYED\n\n`, 50);
+            
+            // Final Phase
+            await typeTerminal(`[!] MISSION ACCOMPLISHED\n`, 50);
+            await typeTerminal(`[!] Self-destruct sequence initiated...\n`, 100);
+            
+            // Countdown
+            for (let i = 3; i > 0; i--) {
+                await typeTerminal(`${i}... `, 300);
+            }
+            
+            // Play hack sound
+            if (hackSound) {
+                hackSound.volume = 0.5;
+                hackSound.currentTime = 0;
+                hackSound.play().catch(e => console.log("Audio error:", e));
+            }
+            
+            await typeTerminal(`\n\n[+] TERMINAL SELF-DESTRUCTED\n`, 50);
+            await sleep(2000);
+            
+            // Close terminal automatically
+            terminalContainer.style.display = 'none';
+            if (typeSound) typeSound.pause();
+            if (hackSound) hackSound.pause();
         }
 
-        function typeHighlightedCode(code, index, buffer) {
-            if (index >= code.length) {
-                terminalBody.innerHTML = highlightHTML(buffer) + '<span class="terminal-cursor"></span>';
-
-                setTimeout(() => {
-                    terminalContainer.style.display = 'none';
-                    if (audio) {
-                        audio.pause();
-                        audio.currentTime = 0;
+        // Helper functions
+        async function typeTerminal(text, speed) {
+            return new Promise(resolve => {
+                let i = 0;
+                function type() {
+                    if (i < text.length) {
+                        terminalBody.innerHTML += text.charAt(i);
+                        terminalBody.scrollTop = terminalBody.scrollHeight;
+                        i++;
+                        setTimeout(type, speed);
+                    } else {
+                        resolve();
                     }
-                }, 3000);
-                return;
-            }
+                }
+                type();
+            });
+        }
 
-            buffer += code[index];
-            terminalBody.innerHTML = highlightHTML(buffer);
+        async function simulateProgress(duration, label) {
+            const progressId = 'progress-' + Date.now();
+            terminalBody.innerHTML += `
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="${progressId}"></div>
+                    </div>
+                    <div class="progress-text">${label}</div>
+                </div>
+            `;
             terminalBody.scrollTop = terminalBody.scrollHeight;
+            
+            return new Promise(resolve => {
+                const start = Date.now();
+                const animate = () => {
+                    const elapsed = Date.now() - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const progressBar = document.getElementById(progressId);
+                    
+                    if (progressBar) {
+                        progressBar.style.width = `${progress * 100}%`;
+                    }
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        resolve();
+                    }
+                };
+                animate();
+            });
+        }
 
-            // Ketik per huruf
-            const typingSpeed = Math.random() * 70 + 40;
-            setTimeout(() => typeHighlightedCode(code, index + 1, buffer), typingSpeed);
+        async function showHexDump() {
+            const hexLines = [];
+            for (let i = 0; i < 8; i++) {
+                const bytes = [];
+                for (let j = 0; j < 16; j++) {
+                    bytes.push(Math.floor(Math.random()*256).toString(16).padStart(2, '0'));
+                }
+                hexLines.push(bytes.join(' '));
+            }
+            
+            for (const line of hexLines) {
+                terminalBody.innerHTML += `<div class="hack-code">${line}</div>`;
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+                await sleep(50);
+            }
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
     </script>
 </body>

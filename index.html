@@ -313,11 +313,11 @@
             terminalBody.innerHTML = '';
             
             // Play sounds
-            //if (typeSound) {
-            //    typeSound.volume = 0.5;
-            //    typeSound.currentTime = 0;
-            //    typeSound.play().catch(e => console.log("Audio error:", e));
-            //}
+            if (typeSound) {
+                typeSound.volume = 0.5;
+                typeSound.currentTime = 0;
+                typeSound.play().catch(e => console.log("Audio error:", e));
+            }
             
             startHackSimulation();
         });
@@ -351,12 +351,6 @@
                     `Blockchain Validator`
                 ]
             };
-
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
             
             // Phase 1: Initialization
             await typeTerminal(`[!] Initializing quantum breach protocol...\n\n`, 30);
@@ -364,51 +358,29 @@
             await typeTerminal(`> Device: ${platform}\n`, 20);
             await typeTerminal(`> Cores: ${cores}\n`, 20);
             await typeTerminal(`> Local IP: ${localIP}\n\n`, 20);
-            await sleep(500);
-
-             if (hackSound) {
-                hackSound.volume = 0.5;
+            if (hackSound) {
+                hackSound.volume = 0.3;
                 hackSound.currentTime = 0;
                 hackSound.play().catch(e => console.log("Audio error:", e));
             }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
+            await sleep(500);
             
             // Phase 2: Target Acquisition
             const target = targets[deviceType][Math.floor(Math.random()*targets[deviceType].length)];
             await typeTerminal(`[~] Scanning dark web for targets...\n`, 40);
             await simulateProgress(1500, 'Accessing TOR network');
             await typeTerminal(`[+] TARGET ACQUIRED: ${target}\n\n`, 50);
-            await sleep(800);
-
             if (hackSound) {
-                hackSound.volume = 0.5;
+                hackSound.volume = 0.3;
                 hackSound.currentTime = 0;
                 hackSound.play().catch(e => console.log("Audio error:", e));
             }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
+            await sleep(800);
             
             // Phase 3: Vulnerability Scan
             await typeTerminal(`[!] Running vulnerability assessment...\n`, 40);
             await simulateProgress(2000, 'Scanning attack surfaces');
 
-            if (hackSound) {
-                hackSound.volume = 0.5;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
             
             // Show found vulnerabilities
             const vulns = [
@@ -417,81 +389,32 @@
                 `${['Buffer overflow','SQL injection','RCE'][Math.floor(Math.random()*3)]} vulnerability`,
                 `Privilege escalation in ${['kernel','driver','service'][Math.floor(Math.random()*3)]}`
             ];
-
-            if (hackSound) {
-                hackSound.volume = 0.5;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
             
             await typeTerminal(`\n[+] FOUND ${Math.floor(Math.random()*3)+2} VULNERABILITIES:\n`, 50);
             for (let i = 0; i < Math.min(3, vulns.length); i++) {
                 await typeTerminal(`- ${vulns[i]}\n`, 30);
             }
             await typeTerminal(`\n`, 20);
-
-            if (hackSound) {
-                hackSound.volume = 0.5;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
             
             // Phase 4: Exploitation
             await typeTerminal(`[!] Deploying zero-day exploit...\n`, 50);
             await simulateProgress(2500, 'Bypassing firewall');
-
-            if (hackSound) {
-                hackSound.volume = 0.5;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
             
             // Show hex dump
             await typeTerminal(`\n[~] MEMORY DUMP:\n`, 50);
-            await showHexDump();
-            await typeTerminal(`\n[+] EXPLOIT SUCCESSFUL! Payload delivered\n\n`, 50);
-
             if (hackSound) {
-                hackSound.volume = 0.5;
+                hackSound.volume = 0.3;
                 hackSound.currentTime = 0;
                 hackSound.play().catch(e => console.log("Audio error:", e));
             }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
+            await showHexDump();
+            await typeTerminal(`\n[+] EXPLOIT SUCCESSFUL! Payload delivered\n\n`, 50);
             
             // Phase 5: Privilege Escalation
             await typeTerminal(`[!] Attempting privilege escalation...\n`, 50);
             await simulateProgress(1800, 'Cracking credentials');
             await typeTerminal(`[+] ROOT ACCESS GRANTED\n\n`, 50);
 
-            if (hackSound) {
-                hackSound.volume = 0.5;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
             
             // Phase 6: Data Exfiltration
             await typeTerminal(`[~] Beginning data exfiltration...\n`, 50);
@@ -502,11 +425,6 @@
                 hackSound.currentTime = 0;
                 hackSound.play().catch(e => console.log("Audio error:", e));
             }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
             
             // Show exfiltrated files
             const files = [
@@ -515,50 +433,22 @@
                 `user_credentials.db (${Math.floor(Math.random()*100)+20}MB)`,
                 `system_backup.img (${Math.floor(Math.random()*1000)+200}MB)`
             ];
-
-            if (hackSound) {
-                hackSound.volume = 0.5;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
             
             await typeTerminal(`\n[+] EXFILTRATED DATA:\n`, 50);
             for (let i = 0; i < Math.min(3, files.length); i++) {
                 await typeTerminal(`- ${files[i]}\n`, 30);
             }
             await typeTerminal(`\n`, 20);
-
-            if (hackSound) {
-                hackSound.volume = 0.5;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
             
             // Phase 7: Covering Tracks
             await typeTerminal(`[!] Covering tracks...\n`, 50);
             await simulateProgress(2000, 'Cleaning logs');
-            await typeTerminal(`[+] FORENSIC COUNTERMEASURES DEPLOYED\n\n`, 50);
-
             if (hackSound) {
-                hackSound.volume = 0.5;
+                hackSound.volume = 0.3;
                 hackSound.currentTime = 0;
                 hackSound.play().catch(e => console.log("Audio error:", e));
             }
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
+            await typeTerminal(`[+] FORENSIC COUNTERMEASURES DEPLOYED\n\n`, 50);
             
             // Final Phase
             await typeTerminal(`[!] MISSION ACCOMPLISHED\n`, 50);

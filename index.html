@@ -165,7 +165,7 @@
             white-space: pre-wrap;
             border-bottom-left-radius: 8px;
             border-bottom-right-radius: 8px;
-	    text-align: left;
+            text-align: left;
         }
 
         .terminal-cursor {
@@ -221,24 +221,24 @@
     </div>
 
     <script>
-    function updateDateTime() {
-        const now = new Date();
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const dateString = now.toLocaleDateString('id-ID', options);
-        const timeString = now.toLocaleTimeString('id-ID');
-        document.getElementById('datetime').textContent = `${dateString} | ${timeString}`;
-    }
+        function updateDateTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('id-ID', options);
+            const timeString = now.toLocaleTimeString('id-ID');
+            document.getElementById('datetime').textContent = `${dateString} | ${timeString}`;
+        }
 
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
 
-    const playBtn = document.getElementById('playBtn');
-    const terminalContainer = document.getElementById('terminalContainer');
-    const terminalBody = document.getElementById('terminalBody');
-    const closeTerminal = document.getElementById('closeTerminal');
+        const playBtn = document.getElementById('playBtn');
+        const terminalContainer = document.getElementById('terminalContainer');
+        const terminalBody = document.getElementById('terminalBody');
+        const closeTerminal = document.getElementById('closeTerminal');
+        const audio = document.getElementById('typeSound');
 
-    // Kode HTML (disingkat bagian <style> dan <script> untuk contoh)
-    const codeString = `<!DOCTYPE html>
+        const codeString = `<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -253,74 +253,57 @@
     <button class="play-btn" id="playBtn">▶ Play</button>
 </body>
 </html>`;
-	    
-    playBtn.addEventListener('click', () => {
-    terminalContainer.style.display = 'flex';
-    terminalBody.innerHTML = '';
-    const audio = document.getElementById('typeSound');
-    if (audio) {
-        audio.load();
-        audio.volume = 0.5;
-        audio.play();
-    }
-    typeHighlightedCode(codeString, 0, '');
-});
 
-    closeTerminal.addEventListener('click', () => {
-        terminalContainer.style.display = 'none';
-    });
+        playBtn.addEventListener('click', () => {
+            terminalContainer.style.display = 'flex';
+            terminalBody.innerHTML = '';
 
-    function highlightHTML(code) {
-        // Escape < & >
-        code = code
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+            // Putar suara hanya sekali saat animasi dimulai
+            if (audio) {
+                audio.volume = 0.5;
+                audio.currentTime = 0;
+                audio.play().catch(e => console.warn("Gagal memutar suara:", e));
+            }
 
-        // Komentar HTML
-        code = code.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span style="color: var(--editor-comment);">$1</span>');
+            typeHighlightedCode(codeString, 0, '');
+        });
 
-        // String
-        code = code.replace(/(".*?"|'.*?')/g, '<span style="color: var(--editor-string);">$1</span>');
-
-        // Tag HTML
-        code = code.replace(/(&lt;\/?[a-zA-Z0-9-]+)/g, '<span style="color: var(--editor-keyword);">$1</span>');
-
-        // Atribut
-        code = code.replace(/\s([a-zA-Z-]+)(=)/g, ' <span style="color: var(--editor-function);">$1</span>$2');
-
-        return code;
-    }
-
-    function typeHighlightedCode(code, index, buffer) {
-    if (index >= code.length) {
-        terminalBody.innerHTML = highlightHTML(buffer) + '<span class="terminal-cursor"></span>';
-
-        setTimeout(() => {
+        closeTerminal.addEventListener('click', () => {
             terminalContainer.style.display = 'none';
-        }, 3000);
+        });
 
-        return;
-    }
-
-    buffer += code[index];
-    terminalBody.innerHTML = highlightHTML(buffer);
-    terminalBody.scrollTop = terminalBody.scrollHeight;
-
-    const audio = document.getElementById('typeSound');
-    if (audio) {
-        try {
-            audio.currentTime = 0;
-            audio.play();
-        } catch (e) {
-            console.warn("Gagal memutar suara:", e);
+        function highlightHTML(code) {
+            code = code
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            code = code.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span style="color: var(--editor-comment);">$1</span>');
+            code = code.replace(/(".*?"|'.*?')/g, '<span style="color: var(--editor-string);">$1</span>');
+            code = code.replace(/(&lt;\/?[a-zA-Z0-9-]+)/g, '<span style="color: var(--editor-keyword);">$1</span>');
+            code = code.replace(/\s([a-zA-Z-]+)(=)/g, ' <span style="color: var(--editor-function);">$1</span>$2');
+            return code;
         }
-    }
 
-    const typingSpeed = Math.random() * 70 + 40;
-    setTimeout(() => typeHighlightedCode(code, index + 1, buffer), typingSpeed);
-}
+        function typeHighlightedCode(code, index, buffer) {
+            if (index >= code.length) {
+                terminalBody.innerHTML = highlightHTML(buffer) + '<span class="terminal-cursor"></span>';
 
-</script>
+                // Tutup terminal 3 detik setelah selesai
+                setTimeout(() => {
+                    terminalContainer.style.display = 'none';
+                    if (audio) audio.pause(); // Hentikan suara setelah selesai
+                }, 3000);
+                return;
+            }
+
+            buffer += code[index];
+            terminalBody.innerHTML = highlightHTML(buffer);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+
+            // Ketik per huruf
+            const typingSpeed = Math.random() * 70 + 40;
+            setTimeout(() => typeHighlightedCode(code, index + 1, buffer), typingSpeed);
+        }
+    </script>
 </body>
 </html>

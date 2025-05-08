@@ -1,130 +1,323 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GooLex - Seamless Access to Internet</title>
+    <title>PlayCode.Space</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sansation:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+        :root {
+            --editor-bg: #1e1e1e;
+            --editor-text: #d4d4d4;
+            --editor-keyword: #569cd6;
+            --editor-function: #dcdcaa;
+            --editor-string: #ce9178;
+            --editor-comment: #6a9955;
+            --editor-highlight: rgba(100, 255, 218, 0.1);
         }
 
         body {
             margin: 0;
-            min-height: 100vh;
+            padding: 0;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(180deg, #d4f5f6 0%, #89d6f4 100%);
-            transition: background 0.5s ease;
-        }
-
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 10%;
-            padding: 20px;
-        }
-
-        .logo {
-            font-size: 32px;
-            font-weight: bold;
-            opacity: 0.7;
-            transition: all 0.4s ease;
-        }
-
-        .subtitle {
-            font-size: 16px;
-            color: #70757a;
-            margin-bottom: 16px;
-            transition: all 0.4s ease;
-        }
-
-        .search-container {
-            width: 100%;
-            max-width: 580px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 14px 28px;
-            font-size: 16px;
-            border: 1px solid rgba(223,225,229,0.8);
-            border-radius: 24px;
-            outline: none;
-            background-color: rgba(255,255,255,0.9);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            -webkit-appearance: none;
-            appearance: none;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-            background-color: rgba(255,255,255,1);
-        }
-
-        /* Focused state */
-        .container.focused {
-            justify-content: flex-start;
-    		padding-top: 20px;
-    		margin-bottom: 0;
-        }
-
-        .container.focused .logo,
-        .container.focused .subtitle {
-            opacity: 0;
-            height: 0;
-            margin: 0;
+            background-color: var(--editor-bg);
+            color: var(--editor-text);
+            font-family: 'Sansation', Arial, sans-serif;
+            text-align: center;
+            position: relative;
             overflow: hidden;
         }
 
-        @media (max-width: 600px) {
-            .search-container {
-                width: 95%;
+        /* Background coding effect */
+        .code-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0.9)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="20" font-family="monospace" font-size="12" fill="%234a4a4a">&lt;div&gt;&lt;/div&gt;</text><text x="15" y="40" font-family="monospace" font-size="12" fill="%234a4a4a">function() {}</text><text x="20" y="60" font-family="monospace" font-size="12" fill="%234a4a4a">return true;</text><text x="10" y="80" font-family="monospace" font-size="12" fill="%234a4a4a">console.log()</text></svg>');
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        .main-text {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--editor-keyword);
+            text-shadow: 0 0 10px rgba(86, 156, 214, 0.5);
+        }
+
+        .datetime {
+            font-size: 1.5rem;
+            font-weight: normal;
+            color: var(--editor-text);
+            margin-bottom: 30px;
+        }
+
+        /* Tombol play */
+        .play-btn {
+            padding: 12px 30px;
+            font-family: 'Sansation', sans-serif;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--editor-keyword), #3a7bb8);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(86, 156, 214, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(86, 156, 214, 0.4);
+        }
+
+        .play-btn:active {
+            transform: translateY(1px);
+        }
+
+        .play-btn::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+
+        .play-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        /* Terminal animation */
+        .terminal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #2d2d2d;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .terminal-title {
+            color: var(--editor-text);
+            font-family: 'Sansation', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .terminal-close {
+            background: none;
+            border: none;
+            color: var(--editor-text);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .terminal-body {
+            flex-grow: 1;
+            background-color: #1e1e1e;
+            padding: 15px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+	    text-align: left;
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background-color: var(--editor-text);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .main-text {
+                font-size: 2rem;
+            }
+            
+            .datetime {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-text {
+                font-size: 1.5rem;
+            }
+            
+            .datetime {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="logo">GooLex</h1>
-        <p class="subtitle">Seamless Access to Internet</p>
-        
-        <form id="search-form" class="search-container" action="https://www.google.com/search" method="GET">
-            <input type="search" 
-                   class="search-input" 
-                   name="q"
-                   placeholder="What are you looking for?"
-                   aria-label="Search"
-                   inputmode="search"
-                   enterkeyhint="search">
-        </form>
+    <div class="code-background"></div>
+    <div class="main-text">PlayCode.Space</div>
+    <div class="datetime" id="datetime"></div>
+    <button class="play-btn" id="playBtn">▶ Play</button>
+
+    <!-- Terminal Animation -->
+    <div class="terminal-container" id="terminalContainer">
+        <div class="terminal-header">
+            <span class="terminal-title">PlayCode.Space</span>
+            <button class="terminal-close" id="closeTerminal">×</button>
+        </div>
+        <div class="terminal-body" id="terminalBody"></div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.querySelector('.container');
-            const searchInput = document.querySelector('.search-input');
-            
-            // Focus animation
-            searchInput.addEventListener('focus', () => {
-                container.classList.add('focused');
-            });
-            
-            // Blur animation
-            searchInput.addEventListener('blur', () => {
-                if (!searchInput.value.trim()) {
-                    container.classList.remove('focused');
-                }
-            });
-            
-        });
-    </script>
+    function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const dateString = now.toLocaleDateString('id-ID', options);
+        const timeString = now.toLocaleTimeString('id-ID');
+        document.getElementById('datetime').textContent = `${dateString} | ${timeString}`;
+    }
+
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    const playBtn = document.getElementById('playBtn');
+    const terminalContainer = document.getElementById('terminalContainer');
+    const terminalBody = document.getElementById('terminalBody');
+    const closeTerminal = document.getElementById('closeTerminal');
+
+    // Kode HTML (disingkat bagian <style> dan <script> untuk contoh)
+    const codeString = `<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayCode.Space</title>
+    <!-- Font & Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Sansation:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-text">PlayCode.Space</div>
+    <div class="datetime" id="datetime"></div>
+    <button class="play-btn" id="playBtn">▶ Play</button>
+</body>
+</html>`;
+
+    playBtn.addEventListener('click', () => {
+        terminalContainer.style.display = 'flex';
+        terminalBody.innerHTML = '';
+        typeHighlightedCode(codeString, 0, '');
+    });
+
+    closeTerminal.addEventListener('click', () => {
+        terminalContainer.style.display = 'none';
+    });
+
+    function highlightHTML(code) {
+        // Escape < & >
+        code = code
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        // Komentar HTML
+        code = code.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span style="color: var(--editor-comment);">$1</span>');
+
+        // String
+        code = code.replace(/(".*?"|'.*?')/g, '<span style="color: var(--editor-string);">$1</span>');
+
+        // Tag HTML
+        code = code.replace(/(&lt;\/?[a-zA-Z0-9-]+)/g, '<span style="color: var(--editor-keyword);">$1</span>');
+
+        // Atribut
+        code = code.replace(/\s([a-zA-Z-]+)(=)/g, ' <span style="color: var(--editor-function);">$1</span>$2');
+
+        return code;
+    }
+
+    function typeHighlightedCode(code, index, buffer) {
+    if (index >= code.length) {
+        terminalBody.innerHTML = highlightHTML(buffer) + '<span class="terminal-cursor"></span>';
+
+        // ⏱️ Tutup otomatis 3 detik setelah selesai
+        setTimeout(() => {
+            terminalContainer.style.display = 'none';
+        }, 3000);
+
+        return;
+    }
+
+    buffer += code[index];
+    terminalBody.innerHTML = highlightHTML(buffer);
+    terminalBody.scrollTop = terminalBody.scrollHeight;
+
+    // 🔊 Mainkan suara lokal
+    const audio = document.getElementById('typeSound');
+    if (audio) {
+        try {
+            audio.currentTime = 0;
+            audio.volume = 0.2;
+            audio.play();
+        } catch (e) {
+            console.warn("Gagal memutar suara:", e);
+        }
+    }
+
+    const typingSpeed = Math.random() * 70 + 40;
+    setTimeout(() => typeHighlightedCode(code, index + 1, buffer), typingSpeed);
+}
+
+</script>
+<audio id="typeSound" src="/assets/sounds/typing.mp3" preload="auto"></audio>
 </body>
 </html>

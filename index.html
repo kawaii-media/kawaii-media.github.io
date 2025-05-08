@@ -209,7 +209,7 @@
     <div class="main-text">PlayCode.Space</div>
     <div class="datetime" id="datetime"></div>
     <button class="play-btn" id="playBtn">▶ Play</button>
-    <audio id="typeSound" src="/typing.mp3" preload="auto"></audio>
+    <audio id="typeSound" src="https://kawaii-media.github.io/typing.mp3" preload="auto"></audio>
 
     <!-- Terminal Animation -->
     <div class="terminal-container" id="terminalContainer">
@@ -253,7 +253,7 @@
     <button class="play-btn" id="playBtn">▶ Play</button>
 </body>
 </html>`;
-
+	    
     playBtn.addEventListener('click', () => {
     terminalContainer.style.display = 'flex';
     terminalBody.innerHTML = '';
@@ -296,7 +296,6 @@
     if (index >= code.length) {
         terminalBody.innerHTML = highlightHTML(buffer) + '<span class="terminal-cursor"></span>';
 
-        // ⏱️ Tutup otomatis 3 detik setelah selesai
         setTimeout(() => {
             terminalContainer.style.display = 'none';
         }, 3000);

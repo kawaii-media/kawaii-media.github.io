@@ -254,17 +254,16 @@
 </html>`;
 
     playBtn.addEventListener('click', () => {
-        terminalContainer.style.display = 'flex';
-        terminalBody.innerHTML = '';
-
-	const audio = document.getElementById('typeSound');
-	if (audio) {
-	  audio.load();
-	  audio.volume = 0.8;
-	}
-	    
-        typeHighlightedCode(codeString, 0, '');
-    });
+    terminalContainer.style.display = 'flex';
+    terminalBody.innerHTML = '';
+    const audio = document.getElementById('typeSound');
+    if (audio) {
+        audio.load();
+        audio.volume = 0.5;
+        audio.play();
+    }
+    typeHighlightedCode(codeString, 0, '');
+});
 
     closeTerminal.addEventListener('click', () => {
         terminalContainer.style.display = 'none';

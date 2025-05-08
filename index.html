@@ -224,28 +224,31 @@
         }
 
         .progress-container {
-            width: 100%;
-            margin: 10px 0;
-        }
+    width: 100%;
+    margin: 10px 0;
+}
 
         .progress-bar {
             height: 20px;
             background-color: #111;
             border-radius: 3px;
             overflow: hidden;
-            position: relative;
+            border: 1px solid #333;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #0f0, #0ff);
+            background: linear-gradient(90deg, #0a0, #0f0);
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
         }
 
         .progress-text {
             margin-top: 5px;
             font-size: 0.8rem;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
         }
 
         @media (max-width: 768px) {
@@ -274,7 +277,6 @@
     <div class="main-text">PlayCode.Space</div>
     <div class="datetime" id="datetime"></div>
     <button class="play-btn" id="playBtn">▶ Play Code</button>
-    <audio id="typeSound" src="https://playcode.space/typing.mp3" preload="auto" loop></audio>
     <audio id="hackSound" src="https://playcode.space/beep.mp3" preload="auto"></audio>
 
     <!-- Terminal Container -->
@@ -304,7 +306,6 @@
         const terminalContainer = document.getElementById('terminalContainer');
         const terminalBody = document.getElementById('terminalBody');
         const closeTerminal = document.getElementById('closeTerminal');
-        const typeSound = document.getElementById('typeSound');
         const hackSound = document.getElementById('hackSound');
 
         // Start hacking simulation
@@ -312,20 +313,12 @@
             terminalContainer.style.display = 'flex';
             terminalBody.innerHTML = '';
             
-            // Play sounds
-            if (typeSound) {
-                typeSound.volume = 0.5;
-                typeSound.currentTime = 0;
-                typeSound.play().catch(e => console.log("Audio error:", e));
-            }
-            
             startHackSimulation();
         });
 
         // Close terminal
         closeTerminal.addEventListener('click', () => {
             terminalContainer.style.display = 'none';
-            if (typeSound) typeSound.pause();
             if (hackSound) hackSound.pause();
         });
 
@@ -347,7 +340,6 @@
                 ],
                 Desktop: [
                     `${platform.toUpperCase()} Mainframe`,
-                    `CIA Backup Server`,
                     `Blockchain Validator`
                 ]
             };
@@ -360,22 +352,26 @@
             await typeTerminal(`> Local IP: ${localIP}\n\n`, 20);
             await sleep(500);
 
+            // Phase 2: Target Acquisition
+            const target = targets[deviceType][Math.floor(Math.random()*targets[deviceType].length)];
+            await typeTerminal(`[~] Scanning dark web for targets...\n`, 40);
             if (hackSound) {
                 hackSound.volume = 0.2;
                 hackSound.currentTime = 0;
                 hackSound.play().catch(e => console.log("Audio error:", e));
             }
-            // Phase 2: Target Acquisition
-            const target = targets[deviceType][Math.floor(Math.random()*targets[deviceType].length)];
-            await typeTerminal(`[~] Scanning dark web for targets...\n`, 40);
             await simulateProgress(1500, 'Accessing TOR network');
             await typeTerminal(`[+] TARGET ACQUIRED: ${target}\n\n`, 50);
             await sleep(800);
             
             // Phase 3: Vulnerability Scan
             await typeTerminal(`[!] Running vulnerability assessment...\n`, 40);
+            if (hackSound) {
+                hackSound.volume = 0.2;
+                hackSound.currentTime = 0;
+                hackSound.play().catch(e => console.log("Audio error:", e));
+            }
             await simulateProgress(2000, 'Scanning attack surfaces');
-
             
             // Show found vulnerabilities
             const vulns = [
@@ -393,13 +389,12 @@
             
             // Phase 4: Exploitation
             await typeTerminal(`[!] Deploying zero-day exploit...\n`, 50);
-            await simulateProgress(2500, 'Bypassing firewall');
-
             if (hackSound) {
                 hackSound.volume = 0.2;
                 hackSound.currentTime = 0;
                 hackSound.play().catch(e => console.log("Audio error:", e));
             }
+            await simulateProgress(2500, 'Bypassing firewall');
             
             // Show hex dump
             await typeTerminal(`\n[~] MEMORY DUMP:\n`, 50);
@@ -408,12 +403,22 @@
             
             // Phase 5: Privilege Escalation
             await typeTerminal(`[!] Attempting privilege escalation...\n`, 50);
+            if (hackSound) {
+                hackSound.volume = 0.2;
+                hackSound.currentTime = 0;
+                hackSound.play().catch(e => console.log("Audio error:", e));
+            }
             await simulateProgress(1800, 'Cracking credentials');
             await typeTerminal(`[+] ROOT ACCESS GRANTED\n\n`, 50);
 
             
             // Phase 6: Data Exfiltration
             await typeTerminal(`[~] Beginning data exfiltration...\n`, 50);
+            if (hackSound) {
+                hackSound.volume = 0.2;
+                hackSound.currentTime = 0;
+                hackSound.play().catch(e => console.log("Audio error:", e));
+            }
             await simulateProgress(3000, 'Decrypting quantum data');
             
             // Show exfiltrated files
@@ -432,6 +437,11 @@
             
             // Phase 7: Covering Tracks
             await typeTerminal(`[!] Covering tracks...\n`, 50);
+            if (hackSound) {
+                hackSound.volume = 0.2;
+                hackSound.currentTime = 0;
+                hackSound.play().catch(e => console.log("Audio error:", e));
+            }
             await simulateProgress(2000, 'Cleaning logs');
             await typeTerminal(`[+] FORENSIC COUNTERMEASURES DEPLOYED\n\n`, 50);
             
@@ -444,19 +454,11 @@
                 await typeTerminal(`${i}... `, 300);
             }
             
-            // Play hack sound
-            if (hackSound) {
-                hackSound.volume = 0.5;
-                hackSound.currentTime = 0;
-                hackSound.play().catch(e => console.log("Audio error:", e));
-            }
-            
             await typeTerminal(`\n\n[+] TERMINAL SELF-DESTRUCTED\n`, 50);
             await sleep(2000);
             
             // Close terminal automatically
             terminalContainer.style.display = 'none';
-            if (typeSound) typeSound.pause();
             if (hackSound) hackSound.pause();
         }
 
@@ -479,35 +481,55 @@
         }
 
         async function simulateProgress(duration, label) {
-            const progressId = 'progress-' + Date.now();
-            terminalBody.innerHTML += `
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="${progressId}"></div>
-                    </div>
-                    <div class="progress-text">${label}</div>
-                </div>
-            `;
+            // Create progress container
+            const progressContainer = document.createElement('div');
+            progressContainer.className = 'progress-container';
+            
+            // Create progress bar
+            const progressBar = document.createElement('div');
+            progressBar.className = 'progress-bar';
+            
+            // Create progress fill
+            const progressFill = document.createElement('div');
+            progressFill.className = 'progress-fill';
+            
+            // Create progress text
+            const progressText = document.createElement('div');
+            progressText.className = 'progress-text';
+            progressText.textContent = label;
+            
+            // Assemble elements
+            progressBar.appendChild(progressFill);
+            progressContainer.appendChild(progressBar);
+            progressContainer.appendChild(progressText);
+            terminalBody.appendChild(progressContainer);
+            
+            // Scroll to bottom
             terminalBody.scrollTop = terminalBody.scrollHeight;
             
             return new Promise(resolve => {
-                const start = Date.now();
-                const animate = () => {
-                    const elapsed = Date.now() - start;
-                    const progress = Math.min(elapsed / duration, 1);
-                    const progressBar = document.getElementById(progressId);
+                const startTime = Date.now();
+                const endTime = startTime + duration;
+                
+                function updateProgress() {
+                    const now = Date.now();
+                    const progress = Math.min((now - startTime) / duration, 1);
                     
-                    if (progressBar) {
-                        progressBar.style.width = `${progress * 100}%`;
-                    }
+                    // Update progress fill width
+                    progressFill.style.width = `${progress * 100}%`;
                     
-                    if (progress < 1) {
-                        requestAnimationFrame(animate);
+                    // Update text with percentage
+                    progressText.textContent = `${label} (${Math.round(progress * 100)}%)`;
+                    
+                    if (now < endTime) {
+                        requestAnimationFrame(updateProgress);
                     } else {
+                        progressText.textContent = `${label} (100%)`;
                         resolve();
                     }
-                };
-                animate();
+                }
+                
+                updateProgress();
             });
         }
 

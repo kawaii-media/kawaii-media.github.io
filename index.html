@@ -256,6 +256,13 @@
     playBtn.addEventListener('click', () => {
         terminalContainer.style.display = 'flex';
         terminalBody.innerHTML = '';
+
+	const audio = document.getElementById('typeSound');
+	if (audio) {
+	  audio.load();
+	  audio.volume = 0.8;
+	}
+	    
         typeHighlightedCode(codeString, 0, '');
     });
 
@@ -305,7 +312,6 @@
     if (audio) {
         try {
             audio.currentTime = 0;
-            audio.volume = 0.2;
             audio.play();
         } catch (e) {
             console.warn("Gagal memutar suara:", e);

@@ -209,7 +209,7 @@
     <div class="main-text">PlayCode.Space</div>
     <div class="datetime" id="datetime"></div>
     <button class="play-btn" id="playBtn">▶ Play</button>
-    <audio id="typeSound" src="https://kawaii-media.github.io/typing.mp3" preload="auto"></audio>
+    <audio id="typeSound" src="https://kawaii-media.github.io/typing.mp3" preload="auto" loop></audio>
 
     <!-- Terminal Animation -->
     <div class="terminal-container" id="terminalContainer">
@@ -258,7 +258,6 @@
             terminalContainer.style.display = 'flex';
             terminalBody.innerHTML = '';
 
-            // Putar suara hanya sekali saat animasi dimulai
             if (audio) {
                 audio.volume = 0.5;
                 audio.currentTime = 0;
@@ -270,6 +269,10 @@
 
         closeTerminal.addEventListener('click', () => {
             terminalContainer.style.display = 'none';
+            if (audio) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
         });
 
         function highlightHTML(code) {
@@ -288,10 +291,12 @@
             if (index >= code.length) {
                 terminalBody.innerHTML = highlightHTML(buffer) + '<span class="terminal-cursor"></span>';
 
-                // Tutup terminal 3 detik setelah selesai
                 setTimeout(() => {
                     terminalContainer.style.display = 'none';
-                    if (audio) audio.pause(); // Hentikan suara setelah selesai
+                    if (audio) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
                 }, 3000);
                 return;
             }

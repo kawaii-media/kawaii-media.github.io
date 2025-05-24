@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuku - Pengelola Bisnis</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <img src="tuku.png" alt="Toko" class="shop-img">
+
+      <div class="title-box">
+        <h1>Tuku - Pengelola bisnis</h1>
+      </div>
+
+      <p class="subtitle">
+        Solusi manajemen bisnis & kasir terintegrasi, bukan sekedar kasir pintar.
+      </p>
+    </div>
+
+    <div class="buttons">
+      <button onclick="showTentang()">Tentang Aplikasi</button>
+      <button onclick="window.open('https://playcode.space/tuku-privacy-policy', '_self')">Kebijakan Privasi</button>
+      <button onclick="window.open('https://playcode.space/tuku-terms-and-conditions', '_self')">Syarat & Ketentuan</button>
+      <button onclick="showHubungi()">Hubungi Kami</button>
+    </div>
+  </div>
+
+<<!-- Popup -->
+<div id="popupOverlay" class="popup-overlay" onclick="closePopup()">
+  <div class="popup" onclick="event.stopPropagation()">
+    <h2 id="popupTitle"></h2>
+    <p id="popupContent"></p>
+    <button class="close-btn" onclick="closePopup()">Tutup</button>
+  </div>
+</div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

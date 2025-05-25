@@ -7,7 +7,7 @@ function showTentang() {
 }
 
 function showHubungi() {
-  const teksKontak = 'Email: kawaiimediadeveloper@gmail.com\nJam Operasional: Senin - Jumat, 09.00 - 16.00 WIB\n\nKami siap membantu Anda!';
+  const teksKontak = 'U+1F4E7: akununtukbisnisonlineku@gmail.com\nJam Operasional: Senin - Jumat, 09.00 - 16.00 WIB\n\nKami siap membantu Anda!';
 
   document.getElementById('popupTitle').textContent = 'Hubungi Kami';
   document.getElementById('popupContent').textContent = teksKontak;

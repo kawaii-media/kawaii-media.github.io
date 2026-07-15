@@ -5,8 +5,10 @@
 
 export interface ExerciseSet {
   id: string;
-  reps: number;
-  weight: number;
+  reps?: number;
+  weight?: number;
+  duration?: number; // duration in seconds (for cardio / plank)
+  distance?: number; // distance in km (for cardio)
   completed: boolean;
 }
 
@@ -17,6 +19,7 @@ export interface WorkoutEntry {
   category: string; // Muscle group: "Dada", "Punggung", "Kaki", "Bahu", "Lengan", "Inti", "Kardio", "Lainnya"
   sets: ExerciseSet[];
   notes?: string;
+  caloriesBurned?: number; // Estimated or manual calories burned
 }
 
 export interface TimerState {

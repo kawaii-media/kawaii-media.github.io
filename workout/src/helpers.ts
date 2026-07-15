@@ -109,7 +109,65 @@ export function calculateStreak(workouts: WorkoutEntry[]): number {
 export function calculateVolume(entry: WorkoutEntry): number {
   return entry.sets
     .filter((s) => s.completed)
-    .reduce((sum, s) => sum + s.reps * s.weight, 0);
+    .reduce((sum, s) => sum + (s.reps || 0) * (s.weight || 0), 0);
+}
+
+// Estimate calories burned for a single workout entry based on exercises, sets, reps, weight, duration and distance
+export function estimateCalories(exerciseName: string, category: string, sets: any[]): number {
+  let totalCalories = 0;
+  
+  sets.forEach((set) => {
+    // We can count active sets (or completed ones if editing, but during creation we want to estimate on the fly)
+    const exerciseLower = exerciseName.toLowerCase();
+    
+    if (category === "Kardio") {
+      // Cardio: based on distance or duration
+      const distance = Number(set.distance) || 0;
+      const duration = Number(set.duration) || 0; // in seconds
+      const minutes = duration / 60;
+      
+      if (exerciseLower.includes("lari") || exerciseLower.includes("treadmill") || exerciseLower.includes("run")) {
+        // Running: ~65 kcal per km, or 10 kcal per minute
+        if (distance > 0) {
+          totalCalories += distance * 65;
+        } else if (minutes > 0) {
+          totalCalories += minutes * 11;
+        } else {
+          totalCalories += 35; // default per set block
+        }
+      } else if (exerciseLower.includes("sepeda") || exerciseLower.includes("cycle") || exerciseLower.includes("bike")) {
+        // Cycling: ~40 kcal per km, or 7 kcal per minute
+        if (distance > 0) {
+          totalCalories += distance * 40;
+        } else if (minutes > 0) {
+          totalCalories += minutes * 7.5;
+        } else {
+          totalCalories += 25;
+        }
+      } else {
+        // Other Cardio: ~8.5 kcal per minute
+        if (minutes > 0) {
+          totalCalories += minutes * 8.5;
+        } else if (distance > 0) {
+          totalCalories += distance * 50;
+        } else {
+          totalCalories += 30;
+        }
+      }
+    } else if (exerciseLower.includes("plank")) {
+      // Plank: ~4.5 kcal per minute, or 0.075 kcal per second
+      const duration = Number(set.duration) || 0; // in seconds
+      totalCalories += duration * 0.075;
+    } else {
+      // Resistance training (Dada, Kaki, etc.):
+      // Standard: around 0.15 kcal per rep + additional based on weight
+      const reps = Number(set.reps) || 0;
+      const weight = Number(set.weight) || 0;
+      totalCalories += reps * (0.15 + (weight * 0.0035));
+    }
+  });
+  
+  return Math.round(totalCalories * 10) / 10; // Round to 1 decimal place
 }
 
 // Format a date string (YYYY-MM-DD) to Indonesian format (e.g., "Rabu, 15 Juli 2026")

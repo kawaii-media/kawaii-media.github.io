@@ -1,6 +1,0 @@
-{
-  "name": "Fitness Daily Progress Tracker",
-  "description": "A clean, responsive client-side fitness and exercise tracker to log daily workouts, sets, reps, and weights with integrated rest timers.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
